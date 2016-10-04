@@ -1,0 +1,77 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll int
+#define dd double
+dd pi = acos(-1.0);
+typedef complex<dd> cp; 
+cp w[1<<20];
+void dft(vector<cp> &b,ll f,ll l,ll n,ll p)
+{   if (n == 1)  return;
+ll op=pow(2,p);
+    dft (b,f,l,n/2,p+1);
+	dft (b,f,l+op,n/2,p+1);
+	ll k=l;
+	vector<cp> t(n);
+	for(ll i=0; i<n/2;i++) {
+		cp u=b[k],v=b[k+op];
+		if(f==1)
+		{ 
+			v/=w[i<<p];
+		}
+		else v*=w[i<<p];
+		t[i] = u+v;
+		t[i+n/2]=u-v;
+		if (f)
+			t[i] /= 2,  t[i+n/2] /= 2;
+		 k+=2*op;
+	} ll po=l;
+	for(ll i=0; i<n;i++) {b[po]=t[i];po+=op;}
+}	
+int main() {
+	ll t; scanf("%d",&t);
+	while(t--){
+	char s1[1<<20],s2[1<<20]; scanf("%s%s",s1,s2);
+	ll l1=strlen(s1), l2 = strlen(s2);
+	reverse(s1, s1 + l1), reverse(s2, s2 + l2);
+	ll n=l1+l2;
+	n=ceil(log(n)/log(2));
+	if(n==floor(log(n)/log(2))) n++;
+	n=pow(2,n);
+    //cout<<n<<" ";
+    for (int i = 0; i < n; ++i)	w[i]=cp(cos(2 * pi * i / n), sin(2 * pi * i / n));
+    vector<cp> a,b;
+    for(ll i=0;i<n;i++) { 
+    if(i<l1){	a.push_back(cp(s1[i]-'0',0));}
+    else{ a.push_back(cp(0,0));}
+    }
+    for(ll i=0;i<n;i++) { 
+    if(i<l2)	{b.push_back(cp(s2[i]-'0',0));	}
+    else {b.push_back(cp(0,0));}
+    } 
+    dft(a,0,0,n,0); 
+    dft(b,0,0,n,0);
+    //for(ll i=0;i<n;i++)  cout<<a[i]<<" "<<b[i];
+    for(ll i=0;i<n;i++) {a[i]*=b[i];}
+    dft(a,1,0,n,0);
+    //for(ll i=0;i<n;i++)  cout<<a[i]<<" ";
+    vector<ll> m;  for(ll i=0;i<n;i++) m.push_back(0); 
+    for(ll i=0;i<n;i++) m[i] = int(a[i].real() + 0.5);
+    ll x=0;
+    for(ll i=0;i<n;i++)
+    {  	m[i]+=x;
+    	x=m[i]/10;
+    	m[i]%=10;
+    } ll k=n-1;
+    for(ll i=n-1;i>=0;i--)
+    {
+    	if(m[i]!=0) break;
+    	else k--;
+    } 
+    for(ll i=k;i>=0;i--) printf("%d",m[i]);
+    if(k<0) cout<<"0";
+    //cout<<n;
+    
+    puts("");
+	}
+	return 0;
+}
