@@ -1,0 +1,52 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+void message(int,string);
+int  main()
+{
+	
+	int c;
+	string s;
+	cin>>c;
+	while(c!=0)
+	{
+		
+		cin>>s;
+		message(c,s);
+		
+		cout<<endl;
+		cin>>c;
+	}
+	return 0;
+}
+void message(int c,string s)
+{
+	
+	int len=s.length();
+		int r=len/c;
+		int k=0;
+		char a[r][c];
+	for(int i=0 ; i<r; i++)
+		{
+			for(int j=0 ; j<c && s[k]!='\0'; j++ )
+			{
+				a[i][j]=s[k];
+				k++;
+			}
+			i++;
+			for(int j=c-1;i<r && j>-1 && s[k]!='\0'; j--)
+			{
+				a[i][j]=s[k];
+				k++;
+			}
+		}	
+	for(int i=0 ; i<c; i++)
+	{
+		for(int j=0 ; j<r ; j++)
+			{
+				cout<<a[j][i];
+			}
+			//cout<<endl;
+	}
+	
+}
